@@ -1,17 +1,25 @@
 # Boggle Solver
 
-This is the summer, you are stuck with your 3 aunts playing boggle and are gettings reckt. Time to use your CS knowledge : try this [Boggle](https://en.wikipedia.org/wiki/Boggle) solver. It will tell you all possible words from a Boggle grid, efficiently.
+This solver accepts big boggle grids, and returns the playable words.
 
-For now, the game only works in French, but it should be easy to extend using new dictionaries.
+> python3 solve.py -s yourstring
 
-## How to use
+__Example__ 
+
+Grid : 
+a e l k
+e w r t
+s m n y
+i u l j
+
+> python3 solve.py -s aelkewrtsmnyiulj
+
+__Warning__ : 
+
+- The dictionnary used is not an official dictionnary of valid words. There may be some missing words, or words displayed as "valid" which do not exist.
+- For now, the game only works in French, but it should be easy to extend using new dictionaries.
 
 ### Requirements
 
 python 3.6+
 numpy
-pyenchant
-
-### Running
-
-Interaction with the solver take place in the "solve" function. Simply enter your grid and the dictionnary of your language, and run the solver. It should return the set of all possible words.
