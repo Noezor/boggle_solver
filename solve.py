@@ -1,14 +1,14 @@
 import numpy as np
 import pickle
 
-def solve(grid, dictionnary):
+def solve(grid, dictionnary, min_length_words_output = 3):
     n,m = grid.shape
 
     all_first_cell_to_explore = [(i,j) for i in range(n) for j in range(m)]
     set_subwords = get_set_subwords(dictionnary)
 
     possible_words_from_cells = [get_all_words_from_cell(grid, first_cell, set_subwords, dictionnary) for first_cell in all_first_cell_to_explore]
-    set_possible_words = set([word for words_from_cell in possible_words_from_cells for word in words_from_cell])
+    set_possible_words = set([word for words_from_cell in possible_words_from_cells for word in words_from_cell if len(word) >= min_length_words_output])
 
     return set_possible_words
 
@@ -30,7 +30,6 @@ def get_all_words_from_cell(grid, first_cell, set_subwords, dictionnary):
         if current_subword in set_subwords:
             possible_moves_from_cell = [(cell, len(current_subword)) for cell in get_cells_can_explore(grid, current_cell) if cell not in already_visited_cell]
             stack_moves = stack_moves + possible_moves_from_cell
-        print(possible_words)
     return set(possible_words)
 
 def get_set_subwords(dictionnary):
@@ -64,7 +63,7 @@ def get_cells_can_explore(grid,current_cell):
 
 def string_to_grid(string):
     n_squared = len(string)
-    assert np.sqrt(n_squared) == int(np.sqrt(n_squared)), f"{n_squared}"
+    assert np.sqrt(n_squared) == int(np.sqrt(n_squared)), f"{n_squared} is not a square. The grid has wrong dimensions."
     n = int(np.sqrt(n_squared))
 
     string = string.lower()
@@ -76,6 +75,13 @@ def string_to_grid(string):
         grid[i,j] = letter
     return grid
 
+def display_grid(grid):
+    str_out = ""
+    for i in range(len(grid)):
+        row = " ".join(grid[i])
+        str_out += f"{row}\n"
+    return str_out
+
 if __name__ == "__main__" :
     import argparse 
     parser = argparse.ArgumentParser()
@@ -83,8 +89,12 @@ if __name__ == "__main__" :
     parser.add_argument("--language", default="fr", choices=["fr"])
     args = parser.parse_args()
     assert len(args.language) == 2
+    assert args.language == "fr", "Unsupported language"
 
     grid = string_to_grid(args.string)
     dictionnary = pickle.load(open(f"dict_{args.language}.pckl", "rb"))
 
+    print("Grid :")
+    print(display_grid(grid))
+    print("Playable words from this grid :")
     print(solve(grid, dictionnary))
